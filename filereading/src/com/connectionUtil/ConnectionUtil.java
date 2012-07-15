@@ -12,7 +12,7 @@ import com.mysql.jdbc.PreparedStatement;
 public class ConnectionUtil {
 	public ConnectionUtil()
 	{
-		System.out.println("ConnectionUtil class instantiated");
+		System.out.print("ConnectionUtil class instantiated");
 	}
 	private static Properties properties=new Properties();
 	Statement s=null;
