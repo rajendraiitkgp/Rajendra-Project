@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- Pattern to output the caller's file name and line number -->
+			<param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="WEBLOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/usr/local/icelero/logs/web.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%t] %-5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="com.icelero" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="WEBLOG"></appender-ref>
+	</logger>
+
+	<root>
+		<priority value="error" />
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</log4j:configuration>
