@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="iCelero" default="war" basedir="./">
+	<property name="package.name" value="ROOT"/>
+	<property name="warfile.name" value="ROOT.war"/>
+	<property name="home.dir" value="${basedir}"/>
+	<property name="3rdParty.dir" value="${basedir}/lib"/>
+	<property name="src.dir" value="src"/>
+	<property name="dest.dir" value="target"/>
+	<property name="target.dest" value="${dest.dir}/${warfile.name}"/>
+	<property name="webcontent.dir" value="WebContent"/>
+	<property name="resources.dir" value="resources"/>
+	<!-- Put everything in a temp folder with the right structure during the build -->
+	<property name="temp.dir" value="temp"/>
+	<property name="temp.dir.web-inf" value="${temp.dir}/WEB-INF"/>
+	<property name="temp.dir.lib" value="${temp.dir.web-inf}/lib"/>
+	<property name="temp.dir.classes" value="${temp.dir.web-inf}/classes"/>
+	<property name="temp.dir.meta-inf" value="${temp.dir}/META-INF"/>
+
+	<path id="build.class.path">
+		<fileset dir="${3rdParty.dir}">
+			<include name="*.jar"/>
+		</fileset>							
+	</path>
+	
+	<target name="init">
+		<mkdir dir="${dest.dir}"/>
+		<mkdir dir="${temp.dir}"/>
+		<mkdir dir="${temp.dir.lib}"/>
+		<mkdir dir="${temp.dir.meta-inf}"/>
+		<mkdir dir="${temp.dir.web-inf}"/>
+		<mkdir dir="${temp.dir.classes}"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dest.dir}"/>
+		<delete dir="${temp.dir}"/>
+	</target>
+	
+	<target name="compile" depends="init">
+		<echo>=== COMPILE ===</echo>
+		<javac srcdir="${src.dir}" destdir="${temp.dir.classes}" source="1.6" debug="on" fork="true" includeAntRuntime="false">
+			<classpath refid="build.class.path"/>
+		</javac>
+	</target>
+	
+	<target name="war" depends="compile">
+		<echo>=== PREPARE TO CREATE WAR ===</echo>
+		<!-- Copy WebContent files -->
+		<copy file="${webcontent.dir}/META-INF/MANIFEST.MF" tofile="${temp.dir.meta-inf}/MANIFEST.MF" overwrite="true"/>
+		<copy file="${webcontent.dir}/WEB-INF/web.xml" tofile="${temp.dir.web-inf}/web.xml" overwrite="true"/>
+		<copy file="${resources.dir}/log4jconfig.xml" tofile="${temp.dir.classes}/log4jconfig.xml" overwrite="true"/>
+		<copy file="${resources.dir}/context.xml" tofile="${temp.dir.meta-inf}/context.xml" overwrite="true"/>
+		<!-- Copy library JAR files -->
+		<copy todir="${temp.dir.lib}">
+			<fileset dir="${3rdParty.dir}">
+				<include name="*.jar"/>
+				<exclude name="*javadoc*"/>
+				<exclude name="*sources*"/>
+			</fileset>
+		</copy>
+		<!-- With all resources in place, create war file -->
+		<echo>=== CREATE WAR ===</echo>
+		<war destfile="${target.dest}" webxml="${temp.dir.web-inf}/web.xml" basedir="${temp.dir}"/>
+	</target>
+	
+</project>
