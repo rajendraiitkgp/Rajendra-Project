@@ -3,5 +3,5 @@
 /war
 /build
 /dist
-/test-lib
+/test-lib/servlet-api.jar
 /test
