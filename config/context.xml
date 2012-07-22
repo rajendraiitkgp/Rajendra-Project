@@ -21,7 +21,7 @@
 
 	<WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-	<Resource name="jdbc/iceleroDB" global="jdbc/iceleroDB"
+	<Resource name="jdbc/ias" global="jdbc/iceleroDB"
 		auth="Container" type="javax.sql.DataSource" maxActive="20" maxIdle="15"
 		maxWait="2000" validationQuery="/* ping */ select 1;" testOnBorrow="true"
 		testWhileIdle="true" timeBetweenEvictionRunsMillis="300000"
@@ -29,5 +29,5 @@
 		removeAbandoned="true" removeAbandonedTimeout="300" logAbandoned="true"
 		username="root" password="telugudb" driverClassName="com.mysql.jdbc.Driver"
 		autoReconnect="true" roundRobinLoadBalance="true"
-		url="jdbc:mysql://localhost:3306/icelero" />
+		url="jdbc:mysql://localhost:3306/ias" />
 </Context>

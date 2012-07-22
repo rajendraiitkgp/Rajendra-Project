@@ -21,7 +21,7 @@
   
   <servlet>
 		<servlet-name>InitPropServlet</servlet-name>
-		<servlet-class>com.icelero.system.SystemInitializer</servlet-class>
+		<servlet-class>com.icelero.ias.as.server.SystemInitializer</servlet-class>
 
 		<init-param>
 			<param-name>log4j-init-file</param-name>

@@ -1,10 +1,10 @@
-package com.icelero.system;
+package com.icelero.ias.as.server;
 
 import java.io.IOException;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,20 +12,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 /**
- * Servlet to Initialize the Log4j logging, Edition Cache and Article Statistics
- * related tasks
+ * Servlet to Initialize the Log4j logging.
+ * 
+ * @author Vamshi
  * 
  */
-public class SystemInitializer extends javax.servlet.http.HttpServlet implements
-		javax.servlet.Servlet {
-
-	private static final long serialVersionUID = 4103947682029887943L;
-
-	/**
-	 * Article statistics synchronizer task scheduler
-	 */
-	@SuppressWarnings("unused")
-	private ScheduledExecutorService scheduler;
+public class SystemInitializer extends HttpServlet {
+	private static final long serialVersionUID = 6487958414781591670L;
 
 	/**
 	 * Logger, will be initialized in the init method.
@@ -56,8 +49,7 @@ public class SystemInitializer extends javax.servlet.http.HttpServlet implements
 		}
 	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		throw new ServletException("Service Unavailable");
 	}
 
@@ -68,19 +60,20 @@ public class SystemInitializer extends javax.servlet.http.HttpServlet implements
 	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
 	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		throw new ServletException("Service Unavailable");
 	}
 
 	private void configureLog4J(ServletConfig config) {
 		String logConfigurationFilePath = getInitParameter("log4j-init-file");
+
 		if (logConfigurationFilePath != null) {
 			DOMConfigurator.configureAndWatch(logConfigurationFilePath, 1000);
 		} else {
-			logger.error("Unable to configure logging, please check the log4j configuration file");
+			throw new IllegalArgumentException("Unable to configure logging, please check the log4j configuration file");
 		}
 		logger = Logger.getLogger(SystemInitializer.class);
+		logger.info("Log4J configuration succeeded");
 		logger.info("Log Configuration File Path: " + logConfigurationFilePath);
 	}
 
