@@ -26,7 +26,7 @@ public class DatabaseUtilities {
 		try {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
-			DataSource dataSource = (DataSource) envContext.lookup("jdbc/ias");
+			DataSource dataSource = (DataSource) envContext.lookup("jdbc/replica");
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(dataSource.getClass().getName());
 			}

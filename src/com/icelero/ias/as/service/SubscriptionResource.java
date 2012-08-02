@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,6 +23,7 @@ import com.icelero.ias.as.database.dao.UserDAO;
 import com.icelero.ias.as.database.util.DatabaseUtilities;
 import com.icelero.ias.as.domain.User;
 import com.icelero.ias.as.service.payload.Subscriber;
+import com.icelero.ias.as.service.response.Health;
 import com.icelero.ias.as.service.response.SubscriptionResponse;
 import com.icelero.ias.as.utilities.StatusCode;
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -34,12 +36,15 @@ public class SubscriptionResource {
 	@Produces(MediaType.APPLICATION_XML)
 	public SubscriptionResponse subscribe(@FormParam("payload") String payload) {
 		Connection connection = null;
+		LOGGER.debug("Payload is : " + payload);
 		try {
 			if (StringUtils.isBlank(payload)) {
+				LOGGER.debug("payload is empty");
 				throw new WebApplicationException(getResponse(StatusCode.SUBSCRIPTION_UNRECOVERABLE_FAILURE));
 			}
 			Subscriber subscriber = readPayload(payload);
 			if (!isValid(subscriber)) {
+				LOGGER.debug("payload is invalid");
 				throw new WebApplicationException(getResponse(StatusCode.SUBSCRIPTION_UNRECOVERABLE_FAILURE));
 			}
 
@@ -48,16 +53,19 @@ public class SubscriptionResource {
 
 			User databaseUser = userDAO.read(connection, subscriber.getIceleroId());
 			if (databaseUser != null) {
+				LOGGER.debug("ID unavailable");
 				throw new WebApplicationException(getResponse(StatusCode.SUBSCRIPTION_ID_UNAVAILABLE));
 			}
 			databaseUser = userDAO.readWithEmail(connection, subscriber.getEmail());
 			if (databaseUser != null) {
+				LOGGER.debug("Email is in DB. subscriber already exists");
 				throw new WebApplicationException(getResponse(StatusCode.SUB_ALREADY_EXISTS));
 			}
 
 			databaseUser = createUser(userDAO, connection, subscriber);
 
 			if (databaseUser == null) {
+				LOGGER.debug("Cannot create user");
 				throw new WebApplicationException(getResponse(StatusCode.SUBSCRIPTION_UNRECOVERABLE_FAILURE));
 			}
 		} catch (Exception e) {
@@ -107,4 +115,12 @@ public class SubscriptionResource {
 
 	}
 
+	@Path("/check")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Health healthChech() {
+		Health health = new Health();
+		health.setResponse("Health Check IAS is up");
+		return health;
+	}
 }

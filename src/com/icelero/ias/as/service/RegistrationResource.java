@@ -40,6 +40,7 @@ public class RegistrationResource {
 	public RegistrationResponse registration(@FormParam("payload") String payload) {
 
 		Connection connection = null;
+		LOGGER.debug("registration payload is : " + payload);
 		try {
 			if (StringUtils.isBlank(payload)) {
 				throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_UNRECOVERABLE_FAILURE));
@@ -51,28 +52,35 @@ public class RegistrationResource {
 
 			connection = DatabaseUtilities.getReadWriteConnection();
 			UserDAO userDAO = new UserDAO();
-
-			User databaseUser = userDAO.read(connection, subscriberCredential.getIceleroId());
+			
+			String userID = subscriberCredential.getIceleroId();
+			User databaseUser = userDAO.read(connection, userID);
 			if (databaseUser == null) {
 				throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_FAILURE_USERNAME_PASSWORD));
 			}
 			if (!CryptUtilities.checkPassword(subscriberCredential.getPassword(), databaseUser.getPassword())) {
 				throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_FAILURE_USERNAME_PASSWORD));
 			}
-			// TODO what to do with the optional clientID sent by the client?
-			String clientID = UUID.randomUUID().toString();
-
-			Client client = createClient(connection, subscriberCredential.getIceleroId(), clientID);
-			if (client == null) {
-				throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_UNRECOVERABLE_FAILURE));
+			ClientDAO clientDAO = new ClientDAO();
+			
+			Client client = clientDAO.readWithUser(connection, userID);
+			if (client == null){
+				// TODO what to do with the optional clientID sent by the client?
+				String clientID = UUID.randomUUID().toString();
+	
+				client = createClient(connection, userID, clientID);
+				if (client == null) {
+					throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_UNRECOVERABLE_FAILURE));
+				}
 			}
 			return getSuccessResponse(client);
+			
 		} catch (Exception e) {
 			LOGGER.error(e);
 			if (e instanceof WebApplicationException) {
 				throw (WebApplicationException) e;
 			}
-			throw new WebApplicationException(getFailureResponse(StatusCode.SUBSCRIPTION_UNRECOVERABLE_FAILURE));
+			throw new WebApplicationException(getFailureResponse(StatusCode.CLIENT_REG_UNRECOVERABLE_FAILURE));
 		} finally {
 			DatabaseUtilities.closeConnection(connection);
 		}

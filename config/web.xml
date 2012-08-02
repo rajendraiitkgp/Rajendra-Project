@@ -25,7 +25,7 @@
 
 		<init-param>
 			<param-name>log4j-init-file</param-name>
-			<param-value>/usr/local/icelero/conf/log4jconfig.xml</param-value>
+			<param-value>WEB-INF/log4jconfig.xml</param-value>
 		</init-param>
 
 		<load-on-startup>1</load-on-startup>

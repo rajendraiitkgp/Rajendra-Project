@@ -19,7 +19,32 @@ public class ClientDAO {
 
 	public ClientDAO() {
 	}
-
+	
+	public Client readWithUser(Connection connection, String userID) {
+		Client client = null;
+		if (!StringUtils.isBlank(userID)) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "SELECT userid, clientid FROM client WHERE userid = ?";
+			try {
+				pstmt = connection.prepareStatement(query);
+				pstmt.setString(1, userID);
+				rset = pstmt.executeQuery();
+				while (rset.next()) {
+					client = new Client();
+					client.setUserID(rset.getString("userid"));
+					client.setClientID(rset.getString("clientid"));
+				}
+			} catch (SQLException e) {
+				LOGGER.error("Error fetching Client with userid [" + userID + "]", e);
+			} finally {
+				DatabaseUtilities.closeResultSet(rset);
+				DatabaseUtilities.closeStatement(pstmt);
+			}
+		}
+		return client;
+	}
+	
 	public Client read(Connection connection, String clientID) {
 		Client client = null;
 		if (!StringUtils.isBlank(clientID)) {

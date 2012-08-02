@@ -21,13 +21,23 @@
 
 	<WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-	<Resource name="jdbc/ias" global="jdbc/iceleroDB"
+	<!-- <Resource name="jdbc/ias" global="jdbc/iceleroDB"
 		auth="Container" type="javax.sql.DataSource" maxActive="20" maxIdle="15"
 		maxWait="2000" validationQuery="/* ping */ select 1;" testOnBorrow="true"
 		testWhileIdle="true" timeBetweenEvictionRunsMillis="300000"
 		numTestsPerEvictionRun="5" minEvictableIdleTimeMillis="1200000"
 		removeAbandoned="true" removeAbandonedTimeout="300" logAbandoned="true"
-		username="root" password="telugudb" driverClassName="com.mysql.jdbc.Driver"
+		username="idbadmin" password="1celero" driverClassName="com.mysql.jdbc.Driver"
 		autoReconnect="true" roundRobinLoadBalance="true"
-		url="jdbc:mysql://localhost:3306/ias" />
+		url="jdbc:mysql://ec2-54-247-3-232.eu-west-1.compute.amazonaws.com/ias" /> -->
+		
+		<Resource name="jdbc/replica" global="jdbc/replica"
+		auth="Container" type="javax.sql.DataSource" maxActive="20" maxIdle="15"
+		maxWait="2000" validationQuery="/* ping */ select 1;" testOnBorrow="true"
+		testWhileIdle="true" timeBetweenEvictionRunsMillis="300000"
+		numTestsPerEvictionRun="5" minEvictableIdleTimeMillis="1200000"
+		removeAbandoned="true" removeAbandonedTimeout="300" logAbandoned="true"
+		username="idbadmin" password="1celer023" driverClassName="com.mysql.jdbc.Driver"
+		autoReconnect="true" roundRobinLoadBalance="true"
+		url="jdbc:mysql:replication://ec2-79-125-28-99.eu-west-1.compute.amazonaws.com,ec2-46-137-129-133.eu-west-1.compute.amazonaws.com/ias" />
 </Context>

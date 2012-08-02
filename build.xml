@@ -46,7 +46,7 @@
 		</copy>
 
 		<copy todir="${web-loc}/WEB-INF">
-			<fileset dir="${src-web-loc}/config/" includes="web.xml" />
+			<fileset dir="${src-web-loc}/config/" includes="web.xml,log4jconfig.xml" />
 		</copy>
 
 		<copy todir="${web-loc}/WEB-INF/classes">

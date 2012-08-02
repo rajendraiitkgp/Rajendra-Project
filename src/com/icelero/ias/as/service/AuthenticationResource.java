@@ -12,12 +12,15 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import net.spy.memcached.MemcachedClient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.icelero.ias.as.database.dao.ClientDAO;
 import com.icelero.ias.as.database.util.DatabaseUtilities;
 import com.icelero.ias.as.domain.Client;
+import com.icelero.ias.as.membase.MemBase;
 import com.icelero.ias.as.service.response.AuthenticationResponse;
 import com.icelero.ias.as.utilities.ClientState;
 import com.icelero.ias.as.utilities.StatusCode;
@@ -47,11 +50,30 @@ public class AuthenticationResource {
 			Client databaseClient = clientDAO.read(connection, clientID);
 
 			if (databaseClient == null) {
-				throw new WebApplicationException(getFailureResponse(StatusCode.AUTH_FAILURE_ACCOUNT_STATUS));
+				DatabaseUtilities.closeConnection(connection);
+				connection = DatabaseUtilities.getReadWriteConnection();
+				databaseClient = clientDAO.read(connection, clientID);
+				if (databaseClient == null) {
+					throw new WebApplicationException(getFailureResponse(StatusCode.AUTH_FAILURE_ACCOUNT_STATUS));
+				}
+			}
+			MemcachedClient memBase = MemBase.getMembaseConnection();
+			if (memBase == null) {
+				throw new WebApplicationException(getFailureResponse(StatusCode.AUTH_UNRECOVERABLE_FAILURE));
+			}
+			String sessionIdFromMembase = MemBase.getValue(clientID, memBase);
+			if (!StringUtils.isBlank(sessionIdFromMembase)) {
+				return getSuccessResponse(sessionIdFromMembase);
 			}
 			String sessionID = UUID.randomUUID().toString();
-			// TODO send the sessionID to CouchBase/Memcached once we have the
-			// details
+			if (!StringUtils.isBlank(sessionID)) {
+				LOGGER.debug("session ID : " + sessionID);
+				if (!MemBase.setValue(clientID, sessionID, memBase)) {
+					LOGGER.debug("sessionID not set for : " + clientID);
+					throw new WebApplicationException(getFailureResponse(StatusCode.AUTH_UNRECOVERABLE_FAILURE));
+				}
+			}
+			MemBase.shutdownClient(memBase);
 			return getSuccessResponse(sessionID);
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -96,8 +118,8 @@ public class AuthenticationResource {
 		// Move them to the database, cache these properties, and keep
 		// refreshing them once every n seconds. These properties can be
 		// modified from a dashboard
-		response.setMediaServerFarmAddress("mediafarm01.us-west.prod.icelero.com");
-		response.setMediaServerFarmPort(3129);
+		response.setMediaServerFarmAddress("176.34.121.182:11211");
+		response.setMediaServerFarmPort(11211);
 		// End configurable properties
 
 		response.setStatusCode(StatusCode.AUTH_SUCCESS.getId());

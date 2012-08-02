@@ -9,15 +9,16 @@
 		</layout>
 	</appender>
 
-	<appender name="WEBLOG" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="/usr/local/icelero/logs/web.log" />
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+	<appender name="WEBLOG" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="${catalina.base}/logs/iCelero.log" />
+		<param name="MaxFileSize" value="5000KB" />
+		<param name="MaxBackupIndex" value="10" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d [%t] %-5p %c{1} - %m%n" />
 		</layout>
 	</appender>
 
-	<logger name="com.icelero" additivity="false">
+	<logger name="com.icelero.ias.as" additivity="false">
 		<level value="debug" />
 		<appender-ref ref="WEBLOG"></appender-ref>
 	</logger>

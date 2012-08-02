@@ -68,7 +68,8 @@ public class SystemInitializer extends HttpServlet {
 		String logConfigurationFilePath = getInitParameter("log4j-init-file");
 
 		if (logConfigurationFilePath != null) {
-			DOMConfigurator.configureAndWatch(logConfigurationFilePath, 1000);
+			String webAppPath = config.getServletContext().getRealPath("/");
+			DOMConfigurator.configureAndWatch(webAppPath + logConfigurationFilePath, 1000);
 		} else {
 			throw new IllegalArgumentException("Unable to configure logging, please check the log4j configuration file");
 		}

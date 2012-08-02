@@ -5,7 +5,6 @@
 // Generated on: 2012.07.21 at 07:30:10 PM IST 
 //
 
-
 package com.icelero.ias.as.service.payload;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -37,91 +38,78 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "iceleroId",
-    "password",
-    "email"
-})
-@XmlRootElement(name = "subscriber")
+@XmlType(name = "subscriber", propOrder = { "iceleroId", "password", "email" })
+@XmlRootElement(namespace = "subscriber", name = "subscriber")
 public class Subscriber {
 
-    @XmlElement(name = "icelero-id", required = true)
-    protected String iceleroId;
-    @XmlElement(required = true)
-    protected String password;
-    @XmlElement(required = true)
-    protected String email;
+	@XmlElement(name = "icelero-id", required = true)
+	protected String iceleroId;
+	@XmlElement(required = true)
+	protected String password;
+	@XmlElement(required = true)
+	protected String email;
 
-    /**
-     * Gets the value of the iceleroId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIceleroId() {
-        return iceleroId;
-    }
+	/**
+	 * Gets the value of the iceleroId property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getIceleroId() {
+		return iceleroId;
+	}
 
-    /**
-     * Sets the value of the iceleroId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIceleroId(String value) {
-        this.iceleroId = value;
-    }
+	/**
+	 * Sets the value of the iceleroId property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setIceleroId(String value) {
+		this.iceleroId = value;
+	}
 
-    /**
-     * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * Gets the value of the password property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    /**
-     * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPassword(String value) {
-        this.password = value;
-    }
+	/**
+	 * Sets the value of the password property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setPassword(String value) {
+		this.password = value;
+	}
 
-    /**
-     * Gets the value of the email property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getEmail() {
-        return email;
-    }
+	/**
+	 * Gets the value of the email property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-    /**
-     * Sets the value of the email property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setEmail(String value) {
-        this.email = value;
-    }
+	/**
+	 * Sets the value of the email property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setEmail(String value) {
+		this.email = value;
+	}
 
 }
